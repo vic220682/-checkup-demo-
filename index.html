@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Чек-Ап от ФармХаб — персональное обучение фармацевтов на данных ОФД</title>
+<style>
+  :root{
+    --lime:#F2FE67; --navy:#3F4559; --navy-d:#363B4D; --ink:#2C2C2C;
+    --dawn:#505960; --mist:#E5E9EC; --white:#fff;
+    --r:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--white);color:var(--ink);
+    font-family:'Manrope',-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
+  .hl{background:var(--lime);border-radius:999px;padding:0 .35em;box-decoration-break:clone;-webkit-box-decoration-break:clone;color:var(--ink);}
+  .btn{display:inline-block;border-radius:999px;padding:13px 24px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:transform .12s ease, box-shadow .12s ease;}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-lime{background:var(--lime);color:var(--ink);box-shadow:0 6px 20px rgba(242,254,103,.4);}
+  .btn-dark{background:var(--ink);color:#fff;}
+  .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);}
+
+  /* header */
+  header{position:sticky;top:0;z-index:50;background:rgba(63,69,89,.92);backdrop-filter:blur(8px);}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .logo{display:flex;align-items:center;gap:9px;color:#fff;font-weight:800;letter-spacing:.5px;}
+  .logo .m{width:26px;height:26px;border-radius:50%;background:var(--lime);display:grid;place-items:center;color:var(--navy);font-size:15px;font-weight:800;}
+  .logo .tag{font-weight:600;font-size:13px;color:var(--lime);border-left:1px solid rgba(255,255,255,.3);padding-left:9px;margin-left:3px;}
+  nav.top{display:flex;align-items:center;gap:26px;}
+  nav.top a{color:rgba(255,255,255,.85);font-size:14px;font-weight:500;}
+  nav.top a:hover{color:#fff}
+  @media(max-width:760px){nav.top a:not(.btn){display:none}}
+
+  /* hero */
+  .hero{position:relative;background:var(--navy);color:#fff;overflow:hidden;padding:74px 0 90px;}
+  .hero .glow{position:absolute;right:-120px;top:-120px;width:560px;height:560px;border-radius:50%;
+    background:radial-gradient(circle, rgba(242,254,103,.55), rgba(242,254,103,0) 62%);filter:blur(6px);}
+  .hero .waves{position:absolute;left:0;bottom:-2px;width:100%;height:60px;opacity:.12;}
+  .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.25fr .9fr;gap:44px;align-items:center;}
+  @media(max-width:840px){.hero .wrap{grid-template-columns:1fr;gap:30px}}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    color:var(--navy);background:var(--lime);padding:5px 12px;border-radius:999px;margin-bottom:18px;}
+  .hero h1{font-size:46px;line-height:1.08;margin:0 0 16px;font-weight:800;letter-spacing:-.5px;}
+  @media(max-width:840px){.hero h1{font-size:34px}}
+  .hero p.sub{font-size:17px;color:rgba(255,255,255,.86);margin:0 0 26px;max-width:520px;}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap;}
+  .hcard{background:var(--ink);border-radius:24px;padding:26px 28px;box-shadow:0 18px 50px rgba(0,0,0,.3);}
+  .hcard .lbl{font-size:13px;color:rgba(255,255,255,.7);font-weight:600;}
+  .hcard .big{font-size:44px;font-weight:800;color:var(--lime);line-height:1.05;margin:6px 0 2px;}
+  .hcard .big small{font-size:18px;color:#fff;font-weight:700}
+  .hcard .meta{font-size:13px;color:rgba(255,255,255,.65);margin-top:10px;border-top:1px solid rgba(255,255,255,.12);padding-top:10px;}
+
+  section{padding:66px 0;}
+  .sec-title{font-size:30px;font-weight:800;letter-spacing:-.4px;margin:0 0 8px;}
+  .sec-sub{color:var(--dawn);font-size:16px;margin:0 0 34px;max-width:620px;}
+  .center{text-align:center;}
+  .center .sec-sub{margin-left:auto;margin-right:auto;}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media(max-width:760px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--mist);border-radius:var(--r);padding:24px;position:relative;}
+  .step .n{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--lime);display:grid;place-items:center;font-weight:800;margin-bottom:14px;}
+  .step h3{margin:0 0 6px;font-size:17px;}
+  .step p{margin:0;font-size:14px;color:var(--dawn);}
+  .step .ic{position:absolute;top:22px;right:22px;opacity:.5}
+
+  /* metric scale */
+  .scalebox{background:var(--navy);color:#fff;border-radius:24px;padding:34px 36px;}
+  .scale{position:relative;height:60px;margin:30px 0 8px;}
+  .scale .track{position:absolute;top:26px;left:0;right:0;height:7px;border-radius:6px;
+    background:linear-gradient(90deg,#d6453f33,#F2FE67);}
+  .scale .mk{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-size:12px;color:rgba(255,255,255,.8);}
+  .scale .mk b{display:block;font-size:15px;color:#fff;}
+  .scale .mk:after{content:"";position:absolute;left:50%;top:24px;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--navy);}
+  .scale .mk.lime:after{background:var(--lime)}
+
+  /* interactive report */
+  .report{background:var(--mist);border-radius:26px;padding:30px;}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+  .tab{background:#fff;border:1.5px solid #dfe4ea;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;}
+  .tab:hover{border-color:var(--ink)}
+  .tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .rgrid{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;}
+  @media(max-width:840px){.rgrid{grid-template-columns:1fr}}
+  .panel{background:#fff;border-radius:var(--r);padding:22px;}
+  .panel h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--dawn);}
+  .verdict{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:5px 13px;font-weight:700;font-size:13px;margin-top:4px;}
+  .verdict.below{background:#fbeceb;color:#d6453f;}
+  .verdict.good{background:#e8f7f0;color:#1f9d6b;}
+  .kpi{display:flex;gap:26px;margin:16px 0 4px;flex-wrap:wrap;}
+  .kpi .v{font-size:34px;font-weight:800;line-height:1;}
+  .kpi .v small{font-size:14px;color:var(--dawn);font-weight:600;display:block;margin-top:4px;}
+  .kpi .v.cx{color:var(--ink)}
+  .vs{font-size:12.5px;color:var(--dawn);margin-top:2px;}
+
+  .bars{margin-top:8px;}
+  .bar{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px;}
+  .bar .lab{width:78px;color:var(--dawn);flex:none;}
+  .bar .tr{flex:1;background:#eef1f4;border-radius:6px;height:18px;overflow:hidden;}
+  .bar .fl{height:100%;border-radius:6px;background:var(--ink);width:0;transition:width .7s cubic-bezier(.2,.8,.2,1);}
+  .bar.solo .fl{background:#d6453f}
+  .bar .vv{width:96px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600;}
+
+  .solo li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #eef1f4;font-size:14px;}
+  .solo li:last-child{border:none}
+  .solo .cnt{font-weight:700;color:var(--ink);}
+  ul.solo,ul.train{list-style:none;margin:8px 0 0;padding:0;}
+  ul.train li{position:relative;padding:7px 0 7px 24px;font-size:14px;border-bottom:1px solid #eef1f4;}
+  ul.train li:last-child{border:none}
+  ul.train li:before{content:"→";position:absolute;left:0;color:#1f9d6b;font-weight:800;}
+
+  /* calculator */
+  .calc{background:var(--ink);color:#fff;border-radius:var(--r);padding:24px;}
+  .calc h4{color:rgba(255,255,255,.7)}
+  .calc .row{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;}
+  .calc .res{font-size:40px;font-weight:800;color:var(--lime);line-height:1.05;}
+  .calc .resy{font-size:15px;color:rgba(255,255,255,.8);}
+  input[type=range]{-webkit-appearance:none;width:100%;height:7px;border-radius:6px;background:#565d72;margin:20px 0 6px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--lime);cursor:pointer;border:3px solid #fff;}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--lime);cursor:pointer;border:3px solid #fff;}
+  .ticks{display:flex;justify-content:space-between;font-size:11.5px;color:rgba(255,255,255,.55);}
+  .calc .tgt{font-size:13px;color:rgba(255,255,255,.85);}
+  .calc .tgt b{color:#fff;font-size:16px}
+
+  /* roi band */
+  .band{background:var(--navy);color:#fff;border-radius:26px;padding:40px;text-align:center;position:relative;overflow:hidden;}
+  .band .glow{position:absolute;left:-80px;bottom:-160px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(242,254,103,.4),transparent 62%);}
+  .band .big{font-size:60px;font-weight:800;color:var(--lime);line-height:1;position:relative;}
+  @media(max-width:600px){.band .big{font-size:40px}}
+
+  /* connect */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:760px){.two{grid-template-columns:1fr}}
+  .give,.get{border-radius:var(--r);padding:26px;}
+  .give{background:var(--mist);} .get{background:var(--ink);color:#fff;}
+  .give h3,.get h3{margin:0 0 14px;font-size:18px;}
+  .give ul,.get ul{margin:0;padding-left:20px;font-size:15px;}
+  .give li,.get li{margin:9px 0;}
+  .get .lime{color:var(--lime);font-weight:700;}
+
+  footer{background:var(--navy-d);color:rgba(255,255,255,.75);padding:30px 0;font-size:13px;}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .note{font-size:12px;color:var(--dawn);margin-top:14px;}
+  .badge{display:inline-block;background:var(--lime);color:var(--ink);font-weight:700;font-size:12px;border-radius:999px;padding:3px 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">
+      <span class="m">m</span> ФАРМХАБ <span class="tag">Чек-Ап</span>
+    </div>
+    <nav class="top">
+      <a href="#how">Как работает</a>
+      <a href="#report">Пример отчёта</a>
+      <a href="#connect">Подключение</a>
+      <a href="#connect" class="btn btn-lime">Подключить ОФД</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="glow"></div>
+  <svg class="waves" viewBox="0 0 120 12" preserveAspectRatio="none"><path d="M0,12 q5,-12 10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0" fill="none" stroke="#F2FE67" stroke-width="2"/></svg>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Сервис для аптечных сетей</span>
+      <h1>Чек-Ап: видим, где фармацевт <span class="hl">недопродаёт</span> — и сколько вы на этом теряете</h1>
+      <p class="sub">Подключаете выгрузку ОФД — мы читаем чеки и собираем по каждому фармацевту персональный план обучения комплексным продажам. С прогнозом выручки в рублях.</p>
+      <div class="cta">
+        <a href="#connect" class="btn btn-lime">Подключить выгрузку ОФД</a>
+        <a href="#report" class="btn btn-ghost">Смотреть пример отчёта</a>
+      </div>
+    </div>
+    <div class="hcard">
+      <div class="lbl">Потенциал на одного фармацевта</div>
+      <div class="big">+0,73 <small>млн ₽/мес</small></div>
+      <div class="lbl">если поднять комплексность чека до уровня сильных коллег</div>
+      <div class="meta">Расчёт на реальных чеках одной аптеки. Без новых точек и рекламы — только за счёт допродаж.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <h2 class="sec-title">Как работает «Чек-Ап»</h2>
+    <p class="sec-sub">Три шага. От вас — одна выгрузка ОФД, дальше всё считает платформа ФармХаб.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Подключение ОФД</h3>
+        <p>Сеть даёт доступ к выгрузке чеков из ОФД на платформу ФармХаб. Разово, по защищённому каналу.</p>
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#505960" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Анализ чеков</h3>
+        <p>Считаем комплексность покупки и упущенные допродажи по каждому фармацевту и сравниваем с рынком.</p>
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#505960" stroke-width="1.8"><path d="M4 19V5M9 19v-7M14 19V9M19 19v-4"/></svg>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Персональный план</h3>
+        <p>Кого учить, каким допродажам и заменам — и сколько рублей это принесёт. Отчёт для собственника.</p>
+        <svg class="ic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#505960" stroke-width="1.8"><path d="M12 3l8 4-8 4-8-4 8-4zM4 12l8 4 8-4M4 17l8 4 8-4"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRIC -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="scalebox">
+      <h2 class="sec-title" style="color:#fff">Главная метрика — <span class="hl">индекс комплексности чека</span></h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.8)">Сколько разных товаров в среднем в одном чеке. Чем выше — тем чаще фармацевт предлагает сопутствующее. Вот шкала по рынку (2 310 фармацевтов):</p>
+      <div class="scale">
+        <div class="track"></div>
+        <div class="mk" style="left:18%"><b>1,94</b>средний</div>
+        <div class="mk lime" style="left:55%"><b>2,08</b>сильные (топ-25%)</div>
+        <div class="mk lime" style="left:90%"><b>2,28</b>топ-10%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE REPORT -->
+<section id="report" style="background:#f6f8fa">
+  <div class="wrap">
+    <h2 class="sec-title">Пример отчёта <span class="badge">интерактив</span></h2>
+    <p class="sec-sub">Демо на обезличенных данных. Переключайте фармацевта и двигайте ползунок цели — апсайд пересчитывается вживую.</p>
+
+    <div class="report">
+      <div class="tabs" id="tabs"></div>
+      <div class="rgrid">
+
+        <div class="panel">
+          <h4>Аптека и фармацевт</h4>
+          <div id="who" style="font-size:20px;font-weight:800;margin:2px 0 2px"></div>
+          <span id="verdict" class="verdict"></span>
+          <div class="kpi">
+            <div class="v cx"><span id="cx"></span><small>товаров в чеке</small></div>
+            <div class="v" id="singleWrap" style="color:#d6453f"><span id="single"></span><small>чеков с 1 товаром</small></div>
+          </div>
+          <div class="vs" id="vsmarket"></div>
+          <h4 style="margin-top:18px">Распределение чеков</h4>
+          <div class="bars" id="bars"></div>
+        </div>
+
+        <div class="panel">
+          <h4>Топ товаров «в одиночку» (шт/мес)</h4>
+          <ul class="solo" id="solo"></ul>
+          <h4 style="margin-top:16px">Чему учить</h4>
+          <ul class="train" id="train"></ul>
+        </div>
+
+      </div>
+
+      <div class="calc" style="margin-top:18px">
+        <h4>Калькулятор апсайда</h4>
+        <div class="row">
+          <div class="tgt">Цель комплексности: <b id="tgtVal"></b></div>
+          <div style="text-align:right">
+            <div class="res" id="resM"></div>
+            <div class="resy" id="resY"></div>
+          </div>
+        </div>
+        <input type="range" id="slider" min="0" max="100" value="50">
+        <div class="ticks">
+          <span>сейчас</span><span>средний 1,94</span><span>сильные 2,08</span><span>топ-10% 2,28</span><span>2,40</span>
+        </div>
+        <div class="note" style="color:rgba(255,255,255,.55);margin-top:12px">Апсайд = (цель − текущая комплексность) × чеков за месяц × средняя стоимость допродажи у этого фармацевта. Это выручка, не прибыль.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI BAND -->
+<section>
+  <div class="wrap">
+    <div class="band">
+      <div class="glow"></div>
+      <div style="position:relative">
+        <p class="sec-sub center" style="color:rgba(255,255,255,.85);margin-bottom:6px">Поднять комплексность чека всего на <b style="color:#fff">+0,1 товара</b> по сети из 3 аптек —</div>
+        <div class="big">+5,7–9,4 млн ₽/год</div>
+        <p style="color:rgba(255,255,255,.8);margin:14px 0 0;position:relative">≈ +2–3% к обороту. Без расширения, без скидок — только обучение фармацевтов допродажам.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT -->
+<section id="connect" style="background:#f6f8fa">
+  <div class="wrap">
+    <h2 class="sec-title center">Что нужно для подключения</h2>
+    <p class="sec-sub center">Один технический шаг — и через сутки первый отчёт.</p>
+    <div class="two">
+      <div class="give">
+        <h3>Сеть даёт</h3>
+        <ul>
+          <li>Доступ к выгрузке чеков из ОФД на платформу ФармХаб</li>
+          <li>Разовая настройка по защищённому каналу</li>
+          <li>Никаких изменений в кассовом ПО</li>
+        </ul>
+      </div>
+      <div class="get">
+        <h3>Сеть получает</h3>
+        <ul>
+          <li><span class="lime">Персональный план обучения</span> по каждому фармацевту</li>
+          <li><span class="lime">Прогноз выручки в рублях</span> от роста комплексности</li>
+          <li>Конкретные допродажи и замены — что говорить на кассе</li>
+          <li>Кого учить, а кто уже сильный — кандидаты в наставники</li>
+        </ul>
+      </div>
+    </div>
+    <div class="center" style="margin-top:28px">
+      <a href="#" class="btn btn-dark">Оставить заявку на подключение</a>
+    </div>
+    <p class="note center">Демонстрационный пример. Данные обезличены (Аптека/Фармацевт 1–3), товары приведены категориями. Метрики основаны на анализе реальных чеков.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><span class="m">m</span> ФАРМХАБ · Чек-Ап</div>
+    <div>Маркетинг для фармрынка нового поколения · matchflow.ru</div>
+  </div>
+</footer>
+
+<script>
+const market = {avg:1.94, p75:2.08, p90:2.28, single:55.6};
+const data = [
+  { id:1, complexity:1.834, single:58.5, checks:9081, dist:[5311,1993,850,927], addon:330,
+    status:'below', verdict:'Ниже рынка — приоритет обучения',
+    solo:[['Спрей от насморка А',88],['Обезболивающее (порошок)',80],['Спрей от насморка Б',72],['Капли в нос',56]],
+    train:['Комплексные продажи в принципе — сопутствующее к каждой второй покупке',
+           'Обезболивающее → гастропротектор (защита желудка)',
+           'Спрей от насморка → жаропонижающее при простуде'] },
+  { id:2, complexity:2.051, single:52.3, checks:6904, dist:[3608,1610,753,933], addon:161,
+    status:'good', verdict:'Выше рынка — кандидат в наставники',
+    solo:[['Обезболивающее (порошок)',35],['Спрей от насморка Б',29],['Спрей от насморка А',27],['Антисептик',21]],
+    train:['Точечно: спрей от насморка → жаропонижающее',
+           'Обезболивающее → гастропротектор'] },
+  { id:3, complexity:2.056, single:50.3, checks:6373, dist:[3204,1590,777,802], addon:154,
+    status:'good', verdict:'Выше рынка — кандидат в наставники',
+    solo:[['Спрей от насморка Б',52],['Гастропротектор',46],['Местное обезболивающее',38],['Спрей от насморка А',30]],
+    train:['Точечно: спрей от насморка → жаропонижающее',
+           'Замена при отсутствии — аналог из той же группы'] },
+];
+
+let cur = 0;
+const fmtRub = n => Math.round(n).toLocaleString('ru-RU');
+const fmtMln = n => (n/1e6).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+// build tabs
+const tabsEl = document.getElementById('tabs');
+data.forEach((d,i)=>{
+  const b=document.createElement('button');
+  b.className='tab'+(i===0?' active':'');
+  b.textContent='Фармацевт '+d.id;
+  b.onclick=()=>{cur=i;document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));render();};
+  tabsEl.appendChild(b);
+});
+
+const distLabels=['1 товар','2 товара','3 товара','4+ товара'];
+const slider=document.getElementById('slider');
+
+function sliderToTarget(d){
+  // map 0..100 to current..2.40
+  const lo=d.complexity, hi=2.40;
+  return lo + (hi-lo)*(slider.value/100);
+}
+
+function render(){
+  const d=data[cur];
+  document.getElementById('who').textContent='Аптека '+d.id+' · Фармацевт '+d.id;
+  const v=document.getElementById('verdict');
+  v.textContent=d.verdict; v.className='verdict '+d.status;
+  document.getElementById('cx').textContent=d.complexity.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('single').textContent=d.single.toLocaleString('ru-RU',{minimumFractionDigits:1})+'%';
+  document.getElementById('singleWrap').style.color = d.single>market.single ? '#d6453f' : '#1f9d6b';
+  const dcx = (d.complexity-market.avg);
+  document.getElementById('vsmarket').innerHTML =
+    'Рынок: <b>'+market.avg.toLocaleString('ru-RU',{minimumFractionDigits:2})+'</b> товаров · одиночных <b>'+market.single+'%</b>. '+
+    'У этого фармацевта комплексность '+(dcx>=0?'<span style="color:#1f9d6b;font-weight:700">выше</span>':'<span style="color:#d6453f;font-weight:700">ниже</span>')+' рынка.';
+
+  // bars
+  const total=d.dist.reduce((a,b)=>a+b,0);
+  const bars=document.getElementById('bars'); bars.innerHTML='';
+  d.dist.forEach((c,i)=>{
+    const pct=(c/total*100);
+    const row=document.createElement('div');
+    row.className='bar'+(i===0?' solo':'');
+    row.innerHTML='<div class="lab">'+distLabels[i]+'</div><div class="tr"><div class="fl"></div></div>'+
+      '<div class="vv">'+c.toLocaleString('ru-RU')+' · '+pct.toFixed(0)+'%</div>';
+    bars.appendChild(row);
+    requestAnimationFrame(()=>{ row.querySelector('.fl').style.width=pct+'%'; });
+  });
+
+  // solo
+  const solo=document.getElementById('solo'); solo.innerHTML='';
+  d.solo.forEach(([n,c])=>{const li=document.createElement('li');li.innerHTML='<span>'+n+'</span><span class="cnt">'+c+'</span>';solo.appendChild(li);});
+  // train
+  const tr=document.getElementById('train'); tr.innerHTML='';
+  d.train.forEach(t=>{const li=document.createElement('li');li.textContent=t;tr.appendChild(li);});
+
+  updateCalc();
+}
+
+function updateCalc(){
+  const d=data[cur];
+  const target=sliderToTarget(d);
+  document.getElementById('tgtVal').textContent=target.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})+' товара/чек';
+  const extraPos=Math.max(0,(target-d.complexity))*d.checks;
+  const month=extraPos*d.addon;
+  document.getElementById('resM').textContent='+'+fmtRub(month)+' ₽/мес';
+  document.getElementById('resY').textContent='≈ +'+fmtMln(month*12)+' млн ₽/год';
+}
+
+slider.addEventListener('input',updateCalc);
+render();
+</script>
+</body>
+</html>
