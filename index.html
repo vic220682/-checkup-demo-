@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ФармХаб — рост продаж аптеки через индивидуальное обучение фармацевтов</title>
+<style>
+  :root{
+    --lime:#F2FE67; --navy:#3F4559; --navy-d:#363B4D; --ink:#2C2C2C;
+    --dawn:#505960; --mist:#E5E9EC; --white:#fff; --r:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--white);color:var(--ink);
+    font-family:'Manrope',-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
+  .hl{background:var(--lime);border-radius:999px;padding:0 .35em;box-decoration-break:clone;-webkit-box-decoration-break:clone;color:var(--ink);}
+  .btn{display:inline-block;border-radius:999px;padding:13px 24px;font-weight:700;font-size:15px;cursor:pointer;border:none;transition:transform .12s ease, box-shadow .12s ease;}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-lime{background:var(--lime);color:var(--ink);box-shadow:0 6px 20px rgba(242,254,103,.4);}
+  .btn-dark{background:var(--ink);color:#fff;}
+  .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);}
+  .badge{display:inline-block;background:var(--lime);color:var(--ink);font-weight:700;font-size:12px;border-radius:999px;padding:3px 10px;}
+
+  header{position:sticky;top:0;z-index:50;background:rgba(63,69,89,.92);backdrop-filter:blur(8px);}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .logo{display:flex;align-items:center;gap:9px;color:#fff;font-weight:800;letter-spacing:.5px;}
+  .logo .m{width:26px;height:26px;border-radius:50%;background:var(--lime);display:grid;place-items:center;color:var(--navy);font-size:15px;font-weight:800;}
+  .logo .tag{font-weight:600;font-size:13px;color:var(--lime);border-left:1px solid rgba(255,255,255,.3);padding-left:9px;margin-left:3px;}
+  nav.top{display:flex;align-items:center;gap:24px;}
+  nav.top a{color:rgba(255,255,255,.85);font-size:14px;font-weight:500;}
+  nav.top a:hover{color:#fff}
+  @media(max-width:820px){nav.top a:not(.btn){display:none}}
+
+  .hero{position:relative;background:var(--navy);color:#fff;overflow:hidden;padding:74px 0 90px;}
+  .hero .glow{position:absolute;right:-120px;top:-120px;width:560px;height:560px;border-radius:50%;
+    background:radial-gradient(circle, rgba(242,254,103,.55), rgba(242,254,103,0) 62%);filter:blur(6px);}
+  .hero .waves{position:absolute;left:0;bottom:-2px;width:100%;height:60px;opacity:.12;}
+  .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.25fr .9fr;gap:44px;align-items:center;}
+  @media(max-width:840px){.hero .wrap{grid-template-columns:1fr;gap:30px}}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    color:var(--navy);background:var(--lime);padding:5px 12px;border-radius:999px;margin-bottom:18px;}
+  .hero h1{font-size:46px;line-height:1.08;margin:0 0 16px;font-weight:800;letter-spacing:-.5px;}
+  @media(max-width:840px){.hero h1{font-size:34px}}
+  .hero p.sub{font-size:17px;color:rgba(255,255,255,.86);margin:0 0 26px;max-width:540px;}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap;}
+  .hcard{background:var(--ink);border-radius:24px;padding:26px 28px;box-shadow:0 18px 50px rgba(0,0,0,.3);}
+  .hcard .lbl{font-size:13px;color:rgba(255,255,255,.7);font-weight:600;}
+  .hcard .big{font-size:44px;font-weight:800;color:var(--lime);line-height:1.05;margin:6px 0 2px;}
+  .hcard .big small{font-size:18px;color:#fff;font-weight:700}
+  .hcard .meta{font-size:13px;color:rgba(255,255,255,.65);margin-top:10px;border-top:1px solid rgba(255,255,255,.12);padding-top:10px;}
+
+  section{padding:66px 0;}
+  .sec-title{font-size:30px;font-weight:800;letter-spacing:-.4px;margin:0 0 8px;}
+  .sec-sub{color:var(--dawn);font-size:16px;margin:0 0 34px;max-width:640px;}
+  .center{text-align:center;}
+  .center .sec-sub{margin-left:auto;margin-right:auto;}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media(max-width:760px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--mist);border-radius:var(--r);padding:24px;position:relative;}
+  .step .n{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--lime);display:grid;place-items:center;font-weight:800;margin-bottom:14px;}
+  .step h3{margin:0 0 6px;font-size:17px;}
+  .step p{margin:0;font-size:14px;color:var(--dawn);}
+
+  .scalebox{background:var(--navy);color:#fff;border-radius:24px;padding:34px 36px;}
+  .scale{position:relative;height:60px;margin:30px 0 8px;}
+  .scale .track{position:absolute;top:26px;left:0;right:0;height:7px;border-radius:6px;background:linear-gradient(90deg,#d6453f33,#F2FE67);}
+  .scale .mk{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-size:12px;color:rgba(255,255,255,.8);}
+  .scale .mk b{display:block;font-size:15px;color:#fff;}
+  .scale .mk:after{content:"";position:absolute;left:50%;top:24px;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--navy);}
+  .scale .mk.lime:after{background:var(--lime)}
+
+  .report{background:var(--mist);border-radius:26px;padding:30px;}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+  .tab{background:#fff;border:1.5px solid #dfe4ea;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;}
+  .tab:hover{border-color:var(--ink)}
+  .tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .rgrid{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;}
+  @media(max-width:840px){.rgrid{grid-template-columns:1fr}}
+  .panel{background:#fff;border-radius:var(--r);padding:22px;}
+  .panel h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--dawn);}
+  .verdict{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:5px 13px;font-weight:700;font-size:13px;margin-top:4px;}
+  .verdict.below{background:#fbeceb;color:#d6453f;}
+  .verdict.good{background:#e8f7f0;color:#1f9d6b;}
+  .kpi{display:flex;gap:26px;margin:16px 0 4px;flex-wrap:wrap;}
+  .kpi .v{font-size:34px;font-weight:800;line-height:1;}
+  .kpi .v small{font-size:14px;color:var(--dawn);font-weight:600;display:block;margin-top:4px;}
+  .vs{font-size:12.5px;color:var(--dawn);margin-top:2px;}
+  .bars{margin-top:8px;}
+  .bar{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px;}
+  .bar .lab{width:78px;color:var(--dawn);flex:none;}
+  .bar .tr{flex:1;background:#eef1f4;border-radius:6px;height:18px;overflow:hidden;}
+  .bar .fl{height:100%;border-radius:6px;background:var(--ink);width:0;transition:width .7s cubic-bezier(.2,.8,.2,1);}
+  .bar.solo .fl{background:#d6453f}
+  .bar .vv{width:96px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600;}
+  .solo li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #eef1f4;font-size:14px;}
+  .solo li:last-child{border:none}.solo .cnt{font-weight:700;color:var(--ink);}
+  ul.solo,ul.train{list-style:none;margin:8px 0 0;padding:0;}
+  ul.train li{position:relative;padding:7px 0 7px 24px;font-size:14px;border-bottom:1px solid #eef1f4;}
+  ul.train li:last-child{border:none}
+  ul.train li:before{content:"→";position:absolute;left:0;color:#1f9d6b;font-weight:800;}
+  .calc{background:var(--ink);color:#fff;border-radius:var(--r);padding:24px;}
+  .calc h4{color:rgba(255,255,255,.7)}
+  .calc .row{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;}
+  .calc .res{font-size:40px;font-weight:800;color:var(--lime);line-height:1.05;}
+  .calc .resy{font-size:15px;color:rgba(255,255,255,.8);}
+  input[type=range]{-webkit-appearance:none;width:100%;height:7px;border-radius:6px;background:#565d72;margin:20px 0 6px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--lime);cursor:pointer;border:3px solid #fff;}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--lime);cursor:pointer;border:3px solid #fff;}
+  .ticks{display:flex;justify-content:space-between;font-size:11.5px;color:rgba(255,255,255,.55);}
+  .calc .tgt{font-size:13px;color:rgba(255,255,255,.85);} .calc .tgt b{color:#fff;font-size:16px}
+  .note{font-size:12px;color:var(--dawn);margin-top:14px;}
+
+  /* TRAINER SECTION */
+  .trainer-sec{background:var(--navy);color:#fff}
+  .tgrid{display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:center;}
+  @media(max-width:880px){.tgrid{grid-template-columns:1fr;gap:34px}}
+  .tlead h2{font-size:30px;font-weight:800;margin:0 0 10px;letter-spacing:-.4px}
+  .tlead p{color:rgba(255,255,255,.85);font-size:16px;margin:0 0 8px}
+  .struct{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;}
+  .struct .c{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:12px 14px;}
+  .struct .c b{color:var(--lime);font-size:13px;display:block;margin-bottom:2px}
+  .struct .c span{font-size:12.5px;color:rgba(255,255,255,.72)}
+  .coursechips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:7px 13px;font-size:12.5px;}
+  .chip.on{background:var(--lime);color:var(--ink);border-color:var(--lime);font-weight:700;}
+
+  .sec-xl{font-size:40px;line-height:1.08;}
+  @media(max-width:840px){.sec-xl{font-size:30px}}
+  .tlead-h{font-size:23px;font-weight:800;margin:2px 0 10px;}
+  .phone{width:100%;max-width:380px;margin:0 auto;background:#15171f;border-radius:42px;padding:10px;box-shadow:0 30px 70px rgba(0,0,0,.5);}
+  .screen{background:#eef1f5;border-radius:34px;overflow:hidden;display:flex;flex-direction:column;height:700px;}
+  .scene{position:relative;background:linear-gradient(180deg,#f7f9fb,#eaeef3);border-bottom:1px solid #e3e8ee;padding:10px 10px 4px;text-align:center;}
+  .scene svg{width:100%;max-width:300px;height:auto;display:block;margin:0 auto;}
+  .scene .stab{position:absolute;top:9px;right:12px;font-size:9.5px;color:var(--dawn);background:#fff;border:1px solid #e3e8ee;border-radius:999px;padding:2px 8px;}
+  .faces{display:flex;align-items:center;justify-content:center;gap:16px;padding-top:4px;}
+  .face{display:flex;flex-direction:column;align-items:center;gap:5px;}
+  .face svg{width:76px;height:76px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+  .face span{font-size:10px;color:var(--dawn);font-weight:600;}
+  .fdots{display:flex;flex-direction:column;gap:4px;align-items:center;}
+  .fdots i{width:6px;height:6px;border-radius:50%;background:#c2ccd6;}
+  .fdots i:nth-child(2){background:#F2FE67;}
+  /* robust metric scale */
+  .scale2{margin-top:26px;}
+  .scale2 .track{height:8px;border-radius:6px;background:linear-gradient(90deg,#d6453f66,#F2FE67);}
+  .scale2 .marks{display:flex;justify-content:space-between;gap:10px;margin-top:14px;}
+  .scale2 .marks>div{flex:1;font-size:13px;color:rgba(255,255,255,.78);}
+  .scale2 .marks>div b{display:block;font-size:19px;color:#fff;}
+  .scale2 .marks>div:nth-child(1){text-align:left;}
+  .scale2 .marks>div:nth-child(2){text-align:center;}
+  .scale2 .marks>div:nth-child(3){text-align:right;}
+  @media(max-width:520px){.scale2 .marks>div{font-size:11px}.scale2 .marks>div b{font-size:15px}}
+  .speaker{height:18px;display:flex;justify-content:center;align-items:center;background:var(--navy)}
+  .speaker i{width:70px;height:5px;border-radius:3px;background:rgba(255,255,255,.25)}
+  .appbar{background:var(--navy);color:#fff;padding:6px 16px 14px;}
+  .appbar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+  .appbar .brand .m{width:22px;height:22px;border-radius:50%;background:var(--lime);color:var(--navy);display:grid;place-items:center;font-size:13px}
+  .appbar .sub{font-size:11.5px;color:rgba(255,255,255,.72);margin:3px 0 0 30px}
+  .appbar .stats{display:flex;gap:8px;margin-top:11px}
+  .stat{background:rgba(255,255,255,.12);border-radius:10px;padding:6px 8px;font-size:11px;flex:1;text-align:center;color:rgba(255,255,255,.8)}
+  .stat b{display:block;font-size:15px;color:var(--lime)}
+  .prog{display:flex;gap:5px;margin-top:10px}
+  .prog i{flex:1;height:4px;border-radius:3px;background:rgba(255,255,255,.25)}
+  .prog i.on{background:var(--lime)}
+  .chatarea{flex:1;padding:16px 16px 6px;overflow:auto}
+  .who{font-size:10.5px;color:var(--dawn);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+  .who .av{width:26px;height:26px;border-radius:50%;background:#cdd5de;display:grid;place-items:center;font-size:13px}
+  .bubble{background:#fff;border-radius:4px 16px 16px 16px;padding:12px 14px;font-size:14px;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+  .opts{padding:4px 16px 14px;display:flex;flex-direction:column;gap:8px}
+  .opt{background:#fff;border:1.5px solid #d7dde4;border-radius:12px;padding:11px 13px;font-size:13px;text-align:left;cursor:pointer;transition:all .12s;color:var(--ink)}
+  .opt:hover{border-color:var(--navy)}
+  .opt.good{border-color:#1f9d6b;background:#e8f7f0}
+  .opt.ok{border-color:#d98c00;background:#fdf3e2}
+  .opt.bad{border-color:#d6453f;background:#fbeceb}
+  .opt.dim{opacity:.4;pointer-events:none}
+  .opt:disabled{cursor:default}
+  .fb{margin:0 16px 12px;border-radius:12px;padding:11px 13px;font-size:12.5px;line-height:1.45}
+  .fb.good{background:#e8f7f0;color:#1f7d56}.fb.ok{background:#fdf3e2;color:#9a6500}.fb.bad{background:#fbeceb;color:#b23a35}
+  .nextwrap{padding:0 16px 16px}
+  .nextwrap button{width:100%;background:var(--ink);color:#fff;border:none;border-radius:12px;padding:12px;font-weight:700;cursor:pointer;font-size:14px}
+  .final{padding:16px;text-align:center}
+  .final .mark{font-size:40px}
+  .receipt{background:#fff;border-radius:14px;padding:14px 16px;text-align:left;font-size:13px;margin:12px 0}
+  .receipt .ln{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #e0e5ea}
+  .receipt .tot{font-weight:800;color:var(--ink);border:none;padding-top:9px;font-size:15px}
+  .final .restart{background:transparent;border:1.5px solid #c9d0d8;color:var(--ink);border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer;margin-top:6px}
+
+  .slogan{background:var(--lime);border-radius:26px;padding:48px 40px;text-align:center;position:relative;overflow:hidden;}
+  .slogan h2{font-size:34px;font-weight:800;margin:0 0 10px;letter-spacing:-.5px;color:var(--ink);line-height:1.12}
+  @media(max-width:700px){.slogan h2{font-size:26px}}
+  .slogan .u{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:5px;}
+  .slogan p{font-size:17px;color:#3a3f2e;max-width:700px;margin:0 auto 28px;}
+  .upills{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:780px;margin:0 auto 28px;}
+  @media(max-width:700px){.upills{grid-template-columns:1fr}}
+  .upills>div{background:rgba(44,44,44,.06);border-radius:14px;padding:16px 14px;text-align:left;}
+  .upills b{display:block;font-size:16px;color:var(--ink);margin-bottom:2px}
+  .upills span{font-size:13px;color:#4a4f3e;}
+  .band{background:var(--navy);color:#fff;border-radius:26px;padding:40px;text-align:center;position:relative;overflow:hidden;}
+  .band .glow{position:absolute;left:-80px;bottom:-160px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(242,254,103,.4),transparent 62%);}
+  .band .big{font-size:60px;font-weight:800;color:var(--lime);line-height:1;position:relative;}
+  @media(max-width:600px){.band .big{font-size:40px}}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:760px){.two{grid-template-columns:1fr}}
+  .give,.get{border-radius:var(--r);padding:26px;}
+  .give{background:var(--mist);} .get{background:var(--ink);color:#fff;}
+  .give h3,.get h3{margin:0 0 14px;font-size:18px;}
+  .give ul,.get ul{margin:0;padding-left:20px;font-size:15px;}
+  .give li,.get li{margin:9px 0;}
+  .get .lime{color:var(--lime);font-weight:700;}
+
+  footer{background:var(--navy-d);color:rgba(255,255,255,.75);padding:30px 0;font-size:13px;}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="m">m</span> ФАРМХАБ <span class="tag">Рост продаж</span></div>
+    <nav class="top">
+      <a href="#how">Как работает</a>
+      <a href="#report">Пример отчёта</a>
+      <a href="#trainer">Обучение</a>
+      <a href="#connect">Подключение</a>
+      <a href="#connect" class="btn btn-lime">Подключить ОФД</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="glow"></div>
+  <svg class="waves" viewBox="0 0 120 12" preserveAspectRatio="none"><path d="M0,12 q5,-12 10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0 t10,0" fill="none" stroke="#F2FE67" stroke-width="2"/></svg>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Повышение продаж · для аптечных сетей</span>
+      <h1>Резерв роста выручки <span class="hl">уже работает</span> за вашим прилавком</h1>
+      <p class="sub">Не новые точки и не скидки. Каждый фармацевт может продавать комплекснее — нужно лишь увидеть, где он недопродаёт, и обучить его лично. <b style="color:#fff">Чек-Ап</b> находит резерв — <b style="color:#fff">ФармАссистент</b> превращает его в навык.</p>
+      <div class="cta">
+        <a href="#connect" class="btn btn-lime">Раскрыть потенциал команды</a>
+        <a href="#trainer" class="btn btn-ghost">Попробовать тренажёр</a>
+      </div>
+    </div>
+    <div class="hcard">
+      <div class="lbl">Потенциал на одного фармацевта</div>
+      <div class="big">+0,73 <small>млн ₽/мес</small></div>
+      <div class="lbl">если поднять комплексность чека до уровня сильных коллег</div>
+      <div class="meta">Расчёт на реальных чеках. Без новых точек и рекламы — только за счёт допродаж.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <h2 class="sec-title">Замкнутый цикл: найти → обучить → проверить</h2>
+    <p class="sec-sub">От вас — одна выгрузка ОФД. Дальше платформа ФармХаб сама находит пробелы и закрывает их обучением.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Чек-Ап по чекам</h3><p>Читаем выгрузку ОФД и считаем комплексность покупки и упущенные допродажи по каждому фармацевту.</p></div>
+      <div class="step"><div class="n">2</div><h3>Персональные тренажёры</h3><p>Под пробелы фармацевта собираем мини-курс интерактивных тренажёров в приложении ФармАссистент — на его реальных товарах.</p></div>
+      <div class="step"><div class="n">3</div><h3>Контроль результата</h3><p>Следующий Чек-Ап показывает, выросла ли комплексность и вернулись ли деньги. Прогресс и баллы — в системе.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLOGAN -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="slogan">
+      <h2>Первое <span class="u">индивидуальное</span>, глубокое и практическое обучение фармацевтов</h2>
+      <p>Не вебинар для галочки и не общий курс. Навык за первым столом: под каждого — по его чекам, на ваших товарах, с измеримым ростом в рублях.</p>
+      <div class="upills">
+        <div><b>Индивидуально</b><span>план обучения под каждого фармацевта по его реальным чекам</span></div>
+        <div><b>Глубоко</b><span>механизм → портрет покупателя → отличия → готовый скрипт</span></div>
+        <div><b>Практически</b><span>симуляция живого диалога с покупателем, а не теория</span></div>
+      </div>
+      <a class="btn btn-dark" href="#connect">Раскрыть потенциал команды</a>
+    </div>
+  </div>
+</section>
+
+<!-- METRIC -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="scalebox">
+      <h2 class="sec-title" style="color:#fff">Главная метрика — <span class="hl">индекс комплексности чека</span></h2>
+      <p class="sec-sub" style="color:rgba(255,255,255,.8)">Сколько разных товаров в среднем в одном чеке. Чем выше — тем чаще фармацевт предлагает сопутствующее. Шкала по рынку (2 310 фармацевтов):</p>
+      <div class="scale2">
+        <div class="track"></div>
+        <div class="marks">
+          <div><b>1,94</b>средний по рынку</div>
+          <div><b>2,08</b>сильные · топ-25%</div>
+          <div><b>2,28</b>топ-10%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORT -->
+<section id="report" style="background:#f6f8fa">
+  <div class="wrap">
+    <h2 class="sec-title">Шаг 1. Пример отчёта Чек-Ап <span class="badge">интерактив</span></h2>
+    <p class="sec-sub">Демо на обезличенных данных. Переключайте фармацевта и двигайте ползунок цели — апсайд пересчитывается вживую.</p>
+    <div class="report">
+      <div class="tabs" id="tabs"></div>
+      <div class="rgrid">
+        <div class="panel">
+          <h4>Аптека и фармацевт</h4>
+          <div id="who" style="font-size:20px;font-weight:800;margin:2px 0 2px"></div>
+          <span id="verdict" class="verdict"></span>
+          <div class="kpi">
+            <div class="v" style="color:var(--ink)"><span id="cx"></span><small>товаров в чеке</small></div>
+            <div class="v" id="singleWrap" style="color:#d6453f"><span id="single"></span><small>чеков с 1 товаром</small></div>
+          </div>
+          <div class="vs" id="vsmarket"></div>
+          <h4 style="margin-top:18px">Распределение чеков</h4>
+          <div class="bars" id="bars"></div>
+        </div>
+        <div class="panel">
+          <h4>Топ товаров «в одиночку» (шт/мес)</h4>
+          <ul class="solo" id="solo"></ul>
+          <h4 style="margin-top:16px">Чему учить</h4>
+          <ul class="train" id="train"></ul>
+        </div>
+      </div>
+      <div class="calc" style="margin-top:18px">
+        <h4>Калькулятор апсайда</h4>
+        <div class="row">
+          <div class="tgt">Цель комплексности: <b id="tgtVal"></b></div>
+          <div style="text-align:right"><div class="res" id="resM"></div><div class="resy" id="resY"></div></div>
+        </div>
+        <input type="range" id="slider" min="0" max="100" value="50">
+        <div class="ticks"><span>сейчас</span><span>1,94</span><span>2,08</span><span>2,28</span><span>2,40</span></div>
+        <div class="note" style="color:rgba(255,255,255,.55);margin-top:12px">Апсайд = (цель − текущая комплексность) × чеков/мес × средняя стоимость допродажи у фармацевта. Это выручка, не прибыль.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINER -->
+<section id="trainer" class="trainer-sec">
+  <div class="wrap">
+    <h2 class="sec-title sec-xl" style="color:#fff;margin-bottom:8px">Шаг 2. Персональный тренажёр в ФармАссистент <span class="badge">интерактив</span></h2>
+    <p class="sec-sub" style="color:rgba(255,255,255,.82);margin-bottom:38px">Чек-Ап нашёл пробел — ФармАссистент закрывает его навыком. Попробуйте прямо сейчас 👇</p>
+    <div class="tgrid">
+      <div class="tlead">
+        <h3 class="tlead-h">От находки — к навыку за 10 минут</h3>
+        <p>Чек-Ап нашёл: <b>Фармацевт 1</b> продаёт обезболивающее без защиты желудка в <b>50%</b> случаев (80 раз/мес). ФармХаб собирает под него мини-курс интерактивных тренажёров — на его же реальных товарах: допродажи, аналоги, замены.</p>
+        <div class="struct">
+          <div class="c"><b>Механизм</b><span>как действует препарат</span></div>
+          <div class="c"><b>Портрет</b><span>кому рекомендовать</span></div>
+          <div class="c"><b>Отличия</b><span>чем лучше аналогов</span></div>
+          <div class="c"><b>Скрипт</b><span>что сказать на кассе</span></div>
+        </div>
+        <p style="font-size:14px;color:rgba(255,255,255,.78)">Формат — симуляция реального диалога. Обратная связь баллами и «проданными упаковками».</p>
+        <div style="margin-top:6px;font-size:13px;color:rgba(255,255,255,.7)">Мини-курс Фармацевта 1:</div>
+        <div class="coursechips" id="tChips">
+          <span class="chip on">① НПВС → гастропротектор</span>
+          <span class="chip">② Спрей → жаропонижающее</span>
+          <span class="chip">③ Нет в наличии → аналог</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:8px">👆 переключайте тренажёры мини-курса</div>
+      </div>
+
+      <!-- PHONE -->
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="speaker"><i></i></div>
+            <div class="appbar">
+              <div class="brand"><span class="m">m</span> ФармАссистент</div>
+              <div class="sub" id="tSub">Тренажёр ① · НПВС → гастропротектор</div>
+              <div class="stats">
+                <div class="stat">Баллы<b id="tPts">0</b></div>
+                <div class="stat">Позиции<b id="tPacks">0</b></div>
+                <div class="stat">Шаг<b id="tStep">1/3</b></div>
+              </div>
+              <div class="prog" id="tProg"></div>
+            </div>
+            <div class="scene">
+              <span class="stab">за первым столом</span>
+              <div class="faces">
+                <div class="face">
+                  <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                    <defs><clipPath id="cc"><circle cx="48" cy="48" r="46"/></clipPath></defs>
+                    <g clip-path="url(#cc)">
+                      <rect width="96" height="96" fill="#e7eef5"/>
+                      <path d="M16 96 C16 73 80 73 80 96 Z" fill="#9fb3c7"/>
+                      <rect x="40" y="60" width="16" height="14" rx="6" fill="#f0c39a"/>
+                      <path d="M24 54 C24 26 72 26 72 54 L72 66 C70 48 26 48 26 66 Z" fill="#6f4d36"/>
+                      <ellipse cx="48" cy="46" rx="20" ry="23" fill="#f4cda3"/>
+                      <path d="M27 42 C30 24 66 24 69 42 C58 33 38 33 27 42 Z" fill="#6f4d36"/>
+                      <ellipse cx="40" cy="47" rx="2.4" ry="3" fill="#3a2e25"/>
+                      <ellipse cx="56" cy="47" rx="2.4" ry="3" fill="#3a2e25"/>
+                      <path d="M35 41 q5 -2.5 9 0" stroke="#5b4632" stroke-width="1.4" fill="none"/>
+                      <path d="M52 41 q5 -2.5 9 0" stroke="#5b4632" stroke-width="1.4" fill="none"/>
+                      <path d="M41 57 q7 5 14 0" stroke="#b5654b" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    </g>
+                    <circle cx="48" cy="48" r="46" fill="none" stroke="#cfd8e2" stroke-width="2"/>
+                  </svg>
+                  <span>Покупатель</span>
+                </div>
+                <div class="fdots"><i></i><i></i><i></i></div>
+                <div class="face">
+                  <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                    <defs><clipPath id="pc"><circle cx="48" cy="48" r="46"/></clipPath></defs>
+                    <g clip-path="url(#pc)">
+                      <rect width="96" height="96" fill="#f3fadd"/>
+                      <path d="M14 96 C14 72 82 72 82 96 Z" fill="#ffffff"/>
+                      <path d="M40 70 L48 86 L56 70 Z" fill="#e4ebd0"/>
+                      <rect x="41" y="58" width="14" height="15" rx="6" fill="#f1c79e"/>
+                      <path d="M26 52 C26 26 70 26 70 52 L70 64 C68 46 28 46 26 64 Z" fill="#3f2f24"/>
+                      <ellipse cx="48" cy="46" rx="19" ry="22" fill="#f5cfa6"/>
+                      <path d="M28 42 C31 25 65 25 68 42 C58 34 38 34 28 42 Z" fill="#3f2f24"/>
+                      <ellipse cx="41" cy="46" rx="2.3" ry="3" fill="#2f2620"/>
+                      <ellipse cx="55" cy="46" rx="2.3" ry="3" fill="#2f2620"/>
+                      <path d="M36 40 q5 -2.5 9 0" stroke="#2f2620" stroke-width="1.3" fill="none"/>
+                      <path d="M51 40 q5 -2.5 9 0" stroke="#2f2620" stroke-width="1.3" fill="none"/>
+                      <path d="M41 55 q7 6 14 0" stroke="#b5654b" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      <circle cx="63" cy="80" r="8" fill="#1f9d6b"/>
+                      <path d="M63 76 v8 M59 80 h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                    </g>
+                    <circle cx="48" cy="48" r="46" fill="none" stroke="#dfe7c8" stroke-width="2"/>
+                  </svg>
+                  <span>Фармацевт</span>
+                </div>
+              </div>
+            </div>
+            <div class="chatarea">
+              <div class="who"><span class="av">🧑</span> Покупатель</div>
+              <div class="bubble" id="tLine"></div>
+            </div>
+            <div class="opts" id="tOpts"></div>
+            <div id="tFbWrap"></div>
+            <div class="nextwrap" id="tNextWrap"></div>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:12px;color:rgba(255,255,255,.55);margin-top:14px">Рабочая демо-симуляция. Выбирайте ответы фармацевта 👆</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section>
+  <div class="wrap">
+    <div class="band">
+      <div class="glow"></div>
+      <div style="position:relative">
+        <p class="sec-sub center" style="color:rgba(255,255,255,.85);margin-bottom:6px">Поднять комплексность чека всего на <b style="color:#fff">+0,1 товара</b> по сети из 3 аптек —</p>
+        <div class="big">+5,7–9,4 млн ₽/год</div>
+        <p style="color:rgba(255,255,255,.8);margin:14px 0 0;position:relative">≈ +2–3% к обороту. Без расширения, без скидок — только обучение фармацевтов допродажам.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT -->
+<section id="connect" style="background:#f6f8fa">
+  <div class="wrap">
+    <h2 class="sec-title center">Что нужно для подключения</h2>
+    <p class="sec-sub center">Один технический шаг — и через сутки первый отчёт.</p>
+    <div class="two">
+      <div class="give">
+        <h3>Сеть даёт</h3>
+        <ul>
+          <li>Доступ к выгрузке чеков из ОФД на платформу ФармХаб</li>
+          <li>Разовая настройка по защищённому каналу</li>
+          <li>Никаких изменений в кассовом ПО</li>
+        </ul>
+      </div>
+      <div class="get">
+        <h3>Сеть получает</h3>
+        <ul>
+          <li><span class="lime">Чек-Ап по каждому фармацевту</span> с прогнозом выручки в рублях</li>
+          <li><span class="lime">Персональные тренажёры</span> в ФармАссистент на реальных товарах</li>
+          <li>Конкретные допродажи, аналоги и замены — что говорить на кассе</li>
+          <li>Контроль роста: кого учить, а кто уже наставник</li>
+        </ul>
+      </div>
+    </div>
+    <div class="center" style="margin-top:28px"><a href="#" class="btn btn-dark">Оставить заявку на подключение</a></div>
+    <p class="note center">Демонстрационный пример. Данные обезличены (Аптека/Фармацевт 1–3). Метрики основаны на анализе реальных чеков, диалог тренажёра — пример.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><span class="m">m</span> ФАРМХАБ · Чек-Ап</div>
+    <div>Маркетинг для фармрынка нового поколения · matchflow.ru</div>
+  </div>
+</footer>
+
+<script>
+/* ---------- REPORT ---------- */
+const market = {avg:1.94, p75:2.08, p90:2.28, single:55.6};
+const data = [
+  { id:1, complexity:1.834, single:58.5, checks:9081, dist:[5311,1993,850,927], addon:330, status:'below', verdict:'Ниже рынка — приоритет обучения',
+    solo:[['Спрей от насморка А',88],['Обезболивающее (порошок)',80],['Спрей от насморка Б',72],['Капли в нос',56]],
+    train:['Комплексные продажи в принципе — сопутствующее к каждой второй покупке','Обезболивающее → гастропротектор (защита желудка)','Спрей от насморка → жаропонижающее'] },
+  { id:2, complexity:2.051, single:52.3, checks:6904, dist:[3608,1610,753,933], addon:161, status:'good', verdict:'Выше рынка — кандидат в наставники',
+    solo:[['Обезболивающее (порошок)',35],['Спрей от насморка Б',29],['Спрей от насморка А',27],['Антисептик',21]],
+    train:['Точечно: спрей от насморка → жаропонижающее','Обезболивающее → гастропротектор'] },
+  { id:3, complexity:2.056, single:50.3, checks:6373, dist:[3204,1590,777,802], addon:154, status:'good', verdict:'Выше рынка — кандидат в наставники',
+    solo:[['Спрей от насморка Б',52],['Гастропротектор',46],['Местное обезболивающее',38],['Спрей от насморка А',30]],
+    train:['Точечно: спрей от насморка → жаропонижающее','Замена при отсутствии — аналог из той же группы'] },
+];
+let cur = 0;
+const fmtRub = n => Math.round(n).toLocaleString('ru-RU');
+const fmtMln = n => (n/1e6).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+const tabsEl = document.getElementById('tabs');
+data.forEach((d,i)=>{const b=document.createElement('button');b.className='tab'+(i===0?' active':'');b.textContent='Фармацевт '+d.id;
+  b.onclick=()=>{cur=i;document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));renderRep();};tabsEl.appendChild(b);});
+const distLabels=['1 товар','2 товара','3 товара','4+ товара'];
+const slider=document.getElementById('slider');
+const sliderToTarget=d=>{const lo=d.complexity,hi=2.40;return lo+(hi-lo)*(slider.value/100);};
+function renderRep(){
+  const d=data[cur];
+  document.getElementById('who').textContent='Аптека '+d.id+' · Фармацевт '+d.id;
+  const v=document.getElementById('verdict');v.textContent=d.verdict;v.className='verdict '+d.status;
+  document.getElementById('cx').textContent=d.complexity.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('single').textContent=d.single.toLocaleString('ru-RU',{minimumFractionDigits:1})+'%';
+  document.getElementById('singleWrap').style.color=d.single>market.single?'#d6453f':'#1f9d6b';
+  const dcx=d.complexity-market.avg;
+  document.getElementById('vsmarket').innerHTML='Рынок: <b>'+market.avg.toLocaleString('ru-RU',{minimumFractionDigits:2})+'</b> товаров · одиночных <b>'+market.single+'%</b>. Комплексность '+(dcx>=0?'<span style="color:#1f9d6b;font-weight:700">выше</span>':'<span style="color:#d6453f;font-weight:700">ниже</span>')+' рынка.';
+  const total=d.dist.reduce((a,b)=>a+b,0);const bars=document.getElementById('bars');bars.innerHTML='';
+  d.dist.forEach((c,i)=>{const pct=c/total*100;const row=document.createElement('div');row.className='bar'+(i===0?' solo':'');
+    row.innerHTML='<div class="lab">'+distLabels[i]+'</div><div class="tr"><div class="fl"></div></div><div class="vv">'+c.toLocaleString('ru-RU')+' · '+pct.toFixed(0)+'%</div>';
+    bars.appendChild(row);requestAnimationFrame(()=>{row.querySelector('.fl').style.width=pct+'%';});});
+  const solo=document.getElementById('solo');solo.innerHTML='';
+  d.solo.forEach(([n,c])=>{const li=document.createElement('li');li.innerHTML='<span>'+n+'</span><span class="cnt">'+c+'</span>';solo.appendChild(li);});
+  const tr=document.getElementById('train');tr.innerHTML='';
+  d.train.forEach(t=>{const li=document.createElement('li');li.textContent=t;tr.appendChild(li);});
+  updateCalc();
+}
+function updateCalc(){const d=data[cur];const target=sliderToTarget(d);
+  document.getElementById('tgtVal').textContent=target.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})+' товара/чек';
+  const month=Math.max(0,(target-d.complexity))*d.checks*d.addon;
+  document.getElementById('resM').textContent='+'+fmtRub(month)+' ₽/мес';
+  document.getElementById('resY').textContent='≈ +'+fmtMln(month*12)+' млн ₽/год';}
+slider.addEventListener('input',updateCalc);
+renderRep();
+
+/* ---------- TRAINER SIMULATION (3 курса) ---------- */
+const courses=[
+ { sub:'Тренажёр ① · НПВС → гастропротектор', base:['Нимесил, пак. №10',480],
+   steps:[
+     {line:'Дайте Нимесил, пакетиков 10. Спина прихватила, попью пару дней.',
+      opts:[
+        {t:'«Пожалуйста, с вас 480 ₽.»',k:'bad',p:0,f:'Продажа закрыта, но шанс помочь упущен: НПВС при курсе раздражает желудок.'},
+        {t:'«Берёте курсом? Желудок раньше на обезболивающие нормально реагировал?»',k:'good',p:10,f:'Верно: уточнили контекст и открыли разговор о защите ЖКТ.'},
+        {t:'«А давление не повышенное? Может, другое возьмёте?»',k:'ok',p:3,f:'Забота есть, но увели от запроса и рискуете спугнуть покупку.'},
+      ]},
+     {line:'Да вроде нормально, но от таблеток иногда подташнивает.',
+      opts:[
+        {t:'«НПВС пару дней лучше пить под защитой желудка — есть Омез. Добавить упаковку?»',k:'good',p:15,item:['Омез, капс. №30',241],f:'🛒 +Омез (241 ₽). Точная допродажа: и забота, и рост чека.'},
+        {t:'«Тогда лучше не пейте Нимесил.»',k:'bad',p:0,f:'Потеряли и допродажу, и основную продажу.'},
+        {t:'«Запивайте побольше водой, всё пройдёт.»',k:'ok',p:2,f:'Совет житейский, но защита ЖКТ не предложена.'},
+      ]},
+     {line:'А обязательно? И так трачусь.',
+      opts:[
+        {t:'«Как хотите.»',k:'ok',p:2,f:'Сдались на первом «нет».'},
+        {t:'«Омез на 5 дней дешевле, чем потом лечить желудок. Возьмёте маленькую упаковку?»',k:'good',p:15,item:['Омез, капс. №30',241],f:'Допродажа удержана: логика «цена сейчас vs проблема потом».'},
+      ]},
+   ]},
+ { sub:'Тренажёр ② · Спрей → жаропонижающее', base:['Снуп, спрей наз.',250],
+   steps:[
+     {line:'Дайте Снуп, спрей от насморка.',
+      opts:[
+        {t:'«Пожалуйста, 250 ₽.»',k:'bad',p:0,f:'Просьба закрыта, но симптомы не уточнили — допродажа упущена.'},
+        {t:'«Простыли? Температура или горло есть?»',k:'good',p:10,f:'Верно: выявили картину простуды — повод предложить сопутствующее.'},
+        {t:'«Большой флакон или маленький?»',k:'ok',p:3,f:'Уточнение по форме полезно, но к симптомам не подвело.'},
+      ]},
+     {line:'Да, познабливает и голова болит, наверное температура.',
+      opts:[
+        {t:'«Тогда добавлю жаропонижающее — снимет температуру и боль. Спрей лечит только нос.»',k:'good',p:15,item:['Жаропонижающее, таб.',293],f:'🛒 +жаропонижающее (293 ₽). Точная допродажа по симптомам.'},
+        {t:'«Снуп поможет, выздоравливайте.»',k:'bad',p:0,f:'Спрей не снимет температуру — потребность закрыта не полностью.'},
+        {t:'«Пейте больше тёплого.»',k:'ok',p:2,f:'Совет уместен, но допродажа не предложена.'},
+      ]},
+     {line:'А не много ли всего сразу?',
+      opts:[
+        {t:'«Как хотите.»',k:'ok',p:2,f:'Сдались на возражении.'},
+        {t:'«Спрей и жаропонижающее — на разные симптомы, вместе быстрее на ноги. Возьмёте?»',k:'good',p:15,item:['Жаропонижающее, таб.',293],f:'Допродажа удержана: разделили задачи симптомов.'},
+      ]},
+   ]},
+ { sub:'Тренажёр ③ · Нет в наличии → аналог', base:null,
+   steps:[
+     {line:'Мне нужен спрей Снуп, на витрине не вижу. У вас нет?',
+      opts:[
+        {t:'«Нет, закончился.»',k:'bad',p:0,f:'Продажа потеряна: человек уйдёт в другую аптеку.'},
+        {t:'«Снуп закончился, но есть аналог с тем же действующим веществом — работает так же. Показать?»',k:'good',p:10,item:['Спрей от насморка (аналог)',230],f:'🛒 Сохранили продажу: предложили равноценную замену.'},
+        {t:'«Посмотрите на нижней полке.»',k:'ok',p:3,f:'Переложили поиск на покупателя — рискуете потерять продажу.'},
+      ]},
+     {line:'А он точно так же помогает?',
+      opts:[
+        {t:'«Да, то же действующее вещество и та же задача — снимает заложенность. Берут постоянно.»',k:'good',p:15,item:['Спрей от насморка (аналог)',230],f:'Уверенная аргументация снимает сомнение — замена принята.'},
+        {t:'«Вроде да, попробуйте.»',k:'ok',p:3,f:'Неуверенно — покупатель может засомневаться.'},
+        {t:'«Не знаю, читайте инструкцию.»',k:'bad',p:0,f:'Сомнение не снято — риск потерять продажу.'},
+      ]},
+     {line:'Хорошо, беру. Раз уж простуда — посоветуете что-нибудь ещё?',
+      opts:[
+        {t:'«Нет, всё.»',k:'ok',p:2,f:'Прямой запрос на совет — а допродажа упущена.'},
+        {t:'«Если есть температура — добавьте жаропонижающее, чтобы быстрее справиться.»',k:'good',p:15,item:['Жаропонижающее, таб.',293],f:'🛒 +жаропонижающее: покупатель сам открыл дверь для допродажи.'},
+      ]},
+   ]},
+];
+let tState;
+const $=id=>document.getElementById(id);
+const maxPts=c=>c.steps.reduce((s,st)=>s+Math.max.apply(null,st.opts.map(o=>o.p)),0);
+function addItem(it){ if(it && !tState.cart.some(c=>c[0]===it[0])) tState.cart.push(it.slice()); }
+function resetChat(){ document.querySelector('#trainer .chatarea').innerHTML='<div class="who"><span class="av">🧑</span> Покупатель</div><div class="bubble" id="tLine"></div>'; }
+function startCourse(i){
+  tState={course:i,idx:0,pts:0,chosen:null,cart:courses[i].base?[courses[i].base.slice()]:[]};
+  $('tSub').textContent=courses[i].sub;
+  document.querySelectorAll('#tChips .chip').forEach((c,j)=>c.classList.toggle('on',j===i));
+  resetChat(); renderTrainer();
+}
+function renderTrainer(){
+  const c=courses[tState.course];
+  const prog=$('tProg');prog.innerHTML='';
+  for(let i=0;i<c.steps.length;i++){const d=document.createElement('i');if(i<=tState.idx)d.className='on';prog.appendChild(d);}
+  $('tPts').textContent=tState.pts;
+  $('tPacks').textContent=tState.cart.length;
+  if(tState.idx>=c.steps.length){renderFinal();return;}
+  $('tStep').textContent=(tState.idx+1)+'/'+c.steps.length;
+  const step=c.steps[tState.idx];
+  $('tLine').textContent=step.line;
+  const opts=$('tOpts');opts.innerHTML='';
+  step.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=o.t;
+    if(tState.chosen!==null){b.disabled=true;if(i===tState.chosen)b.classList.add(o.k);else b.classList.add('dim');}
+    b.onclick=()=>{if(tState.chosen!==null)return;tState.chosen=i;tState.pts+=o.p;addItem(o.item);renderTrainer();};
+    opts.appendChild(b);
+  });
+  if(tState.chosen!==null){
+    const o=step.opts[tState.chosen];
+    $('tFbWrap').innerHTML='<div class="fb '+o.k+'">'+o.f+'</div>';
+    $('tNextWrap').innerHTML='<button>'+(tState.idx===c.steps.length-1?'Завершить':'Далее →')+'</button>';
+    $('tNextWrap').querySelector('button').onclick=()=>{tState.idx++;tState.chosen=null;renderTrainer();};
+  } else {$('tFbWrap').innerHTML='';$('tNextWrap').innerHTML='';}
+}
+function renderFinal(){
+  const c=courses[tState.course];
+  $('tStep').textContent='✓';
+  $('tOpts').innerHTML='';$('tFbWrap').innerHTML='';$('tNextWrap').innerHTML='';
+  const cart=tState.cart,n=cart.length,total=cart.reduce((s,it)=>s+it[1],0),mx=maxPts(c);
+  const rows=cart.map(it=>'<div class="ln"><span>'+it[0]+'</span><span>'+it[1].toLocaleString('ru-RU')+' ₽</span></div>').join('');
+  let mark,msg;
+  if(n===0){mark='🙁';msg='Чек пустой — продажа потеряна. Пройдите заново и предложите замену.';}
+  else if(n===1){mark='🙂';msg='Продажа есть, но без допродажи. Комплексность чека = 1.';}
+  else {mark='🎉';msg='Отлично! Комплексность чека выросла до '+n+'. Так растёт выручка.';}
+  const area=document.querySelector('#trainer .chatarea');
+  area.innerHTML='<div class="final">'+
+    '<div class="mark">'+mark+'</div>'+
+    '<div style="font-weight:800;font-size:17px;margin-top:4px">Тренажёр пройден</div>'+
+    '<div class="receipt">'+(rows||'<div class="ln"><span>Нет позиций</span><span>0 ₽</span></div>')+
+      '<div class="ln tot"><span>Чек · '+n+' поз.</span><span>'+total.toLocaleString('ru-RU')+' ₽</span></div></div>'+
+    '<div style="font-size:13px;color:var(--dawn)">Баллы: <b style="color:var(--ink)">'+tState.pts+'/'+mx+'</b> · Позиций в чеке: <b style="color:var(--ink)">'+n+'</b></div>'+
+    '<div style="font-size:12.5px;color:var(--dawn);margin-top:8px">'+msg+'</div>'+
+    '<button class="restart">Пройти заново</button></div>';
+  area.querySelector('.restart').onclick=()=>startCourse(tState.course);
+}
+document.querySelectorAll('#tChips .chip').forEach((c,i)=>{c.style.cursor='pointer';c.onclick=()=>startCourse(i);});
+startCourse(0);
+</script>
+</body>
+</html>
